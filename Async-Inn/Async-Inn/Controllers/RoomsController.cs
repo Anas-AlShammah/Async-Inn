@@ -37,7 +37,18 @@ namespace Async_Inn.Controllers
           var room = await _context.GetRoom(id);
             return Ok(room);
         }
-
+        [HttpPost("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult> AddAmenityToRoom(int roomId, int amenityId)
+        {
+            await _context.AddAmenityToRoom(roomId, amenityId);
+            return Ok();
+        }
+        [HttpDelete("{roomId}/Amenity/{amenityId}")]
+        public async Task<ActionResult> RemoveAmentityFromRoom(int roomId, int amenityId)
+        {
+            await _context.RemoveAmentityFromRoom(roomId, amenityId);
+            return NoContent();
+        }
         // PUT: api/Rooms/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

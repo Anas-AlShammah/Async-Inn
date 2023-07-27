@@ -12,6 +12,29 @@ namespace Async_Inn.Services
         {
             _context = context;
         }
+
+        public async Task AddAmenityToRoom(int roomId, int amenityId)
+        {
+            var rooms = await _context.Rooms
+               .Include(e => e.Amenities)
+               .ToListAsync();
+            var amenity = await _context.Amenities.Where(e => e.Id == amenityId).FirstOrDefaultAsync();
+            var room= rooms.Where(e=>e.Id== roomId).FirstOrDefault();
+            room.Amenities.Add(amenity);
+            await _context.SaveChangesAsync();
+
+        }
+        public async Task RemoveAmentityFromRoom(int roomId, int amenityId)
+        {
+            var rooms = await _context.Rooms
+              .Include(e => e.Amenities)
+              .ToListAsync();
+            var amenity = await _context.Amenities.Where(e => e.Id == amenityId).FirstOrDefaultAsync();
+            var room = rooms.Where(e => e.Id == roomId).FirstOrDefault();
+            room.Amenities.Remove(amenity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteRoom(int id)
         {
             var room =await GetRoom(id);
@@ -23,13 +46,16 @@ namespace Async_Inn.Services
 
         public async Task<Room> GetRoom(int id)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms
+                .FindAsync(id);
             return room;
         }
 
         public async Task<IEnumerable<Room>> GetRoomss()
         {
-            var rooms = await _context.Rooms.ToListAsync();
+            var rooms = await _context.Rooms
+                .Include(e=>e.Amenities)
+                .ToListAsync();
             return rooms;
         }
 
@@ -48,6 +74,8 @@ namespace Async_Inn.Services
             roomUpdate.Layout = room.Layout;
             await _context.SaveChangesAsync();
         }
+
+       
 
         public bool RoomExists(int id)
         {

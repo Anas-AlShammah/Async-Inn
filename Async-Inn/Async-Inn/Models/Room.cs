@@ -1,4 +1,6 @@
-﻿namespace Async_Inn.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Async_Inn.Models
 {
     public class Room
     {
@@ -6,5 +8,11 @@
         public string Name { get; set; }
 
         public int Layout { get; set; }
+        [JsonIgnore]
+        public List<Amenity> Amenities { get;  } = new();
+        [JsonIgnore]
+        public List<HotelRoom>? HotelRooms { get; } = new();
+        //[JsonIgnore]
+        //public List<Hotel>? Hotels { get; set; }
     }
 }

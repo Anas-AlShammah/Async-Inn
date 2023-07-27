@@ -12,9 +12,12 @@ namespace Async_Inn
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
-            builder.Services.AddControllers();
+            builder.Services.AddControllers().AddNewtonsoftJson(options =>
+       options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+     );
+         
             builder.Services.AddScoped < IHotel,HotelService>();
+            builder.Services.AddScoped<IHoteRoom, HotelRoomRepository>();
             builder.Services.AddTransient<IRoomcs, RoomService>();
             builder.Services.AddTransient<IAmenity, AmenityService>();
             builder.Services.AddDbContext<AsyncInnDbContext>(options =>
