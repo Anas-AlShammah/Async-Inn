@@ -29,7 +29,9 @@ namespace Async_Inn.Services
 
         public async Task<IEnumerable<Hotel>> GetHotels()
         {
-            var hotels = await _context.Hotels.ToListAsync();
+            var hotels = await _context.Hotels
+             .Include(h => h.HotelRooms)
+                .ToListAsync();
             return hotels;
         }
 

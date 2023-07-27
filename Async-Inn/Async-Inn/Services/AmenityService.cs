@@ -31,7 +31,9 @@ namespace Async_Inn.Services
 
         public async Task<IEnumerable<Amenity>> GetAmenities()
         {
-            var amenities = await _context.Amenities.ToListAsync();
+            var amenities = await _context.Amenities
+                .Include(e=>e.Rooms)
+                .ToListAsync();
             return amenities;
         }
 

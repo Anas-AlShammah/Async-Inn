@@ -16,20 +16,33 @@ namespace Async_Inn.Controllers
     public class HotelsController : ControllerBase
     {
         private readonly IHotel _context;
+        private readonly IHoteRoom _hotelRoom;
 
-        public HotelsController(IHotel context)
+        public HotelsController(IHotel context, IHoteRoom hotelRoom)
         {
             _context = context;
+            _hotelRoom = hotelRoom;
         }
 
         // GET: api/Hotels
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotels()
+        [HttpGet("{hotelId}/Rooms")]
+        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelRooms(int hotelId)
         {
-         var hotels=await _context.GetHotels();
-            return Ok(hotels);
+            var rooms = await _hotelRoom.GetAllRooms(hotelId);
+            return Ok(rooms);
         }
-
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Room>>> GetHotels()
+        {
+            var rooms = await _context.GetHotels();
+            return Ok(rooms);
+        }
+        [HttpGet("{hotelId}/Rooms/{roomNumber}")]
+        public async Task<ActionResult<Room>> GetHotelRoom(int hotelId,int roomNumber)
+        {
+            var room = await _hotelRoom.GetRoom(hotelId,roomNumber);
+            return Ok(room);
+        }
         // GET: api/Hotels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
@@ -59,7 +72,12 @@ namespace Async_Inn.Controllers
           await _context.PostHotel(hotel);
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
-
+        [HttpPost("{hotelId}/rooms")]
+        public async Task<ActionResult> PostRoom (int id, HotelRoom hotelRoom)
+        {
+            await _hotelRoom.PostRoom(id, hotelRoom);
+            return Ok();
+        }
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHotel(int id)
