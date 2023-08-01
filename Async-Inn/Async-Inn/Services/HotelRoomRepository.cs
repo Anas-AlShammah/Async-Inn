@@ -32,8 +32,11 @@ namespace Async_Inn.Services
             //return  rooms;
             //return hotel;
             var rooms = await _context.hotelRooms
+                  .Include(r => r.Room)
             .Where(hr => hr.HotelId == hotelId)
-            .Select(hr => hr.Room ) 
+           
+            .Select(hr => hr.Room )
+           
             .ToListAsync();
             return rooms;
         }

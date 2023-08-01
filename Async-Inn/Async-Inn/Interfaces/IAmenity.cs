@@ -1,15 +1,16 @@
 ﻿using Async_Inn.Models;
+using Async_Inn.Models.Dtos;
 
 namespace Async_Inn.Interfaces
 {
     public interface IAmenity
     {
-        Task<IEnumerable<Amenity>> GetAmenities();
+        Task<IEnumerable<AmenitiesDto>> GetAmenities();
 
-        Task<Amenity> GetAmenity(int id);
-        Task PutAmenity(int id, Amenity amenity);
+        Task<AmenitiesDto> GetAmenity(int id);
+        Task PutAmenity(int id, AmenitiesDto amenity);
 
-        Task<Amenity> PostAmenity(Amenity amenity);
+        Task<AmenitiesDto> PostAmenity(AmenitiesDto amenity);
         Task DeleteAmenity(int id);
         bool AmenityExists(int id);
     }

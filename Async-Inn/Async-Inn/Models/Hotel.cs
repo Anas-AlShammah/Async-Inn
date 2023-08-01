@@ -15,7 +15,7 @@ namespace Async_Inn.Models
 
         public int Phone { get; set; }
       
-        public List<HotelRoom>? HotelRooms { get; } = new();
+        public List<HotelRoom>? HotelRooms { get; set; } = new();
         
         //public List<Room>? Rooms { get; set; }
     }

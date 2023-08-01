@@ -14,6 +14,9 @@ namespace Async_Inn.Data
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<HotelRoom> hotelRooms { get; set; }
 
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //base.OnModelCreating(modelBuilder);

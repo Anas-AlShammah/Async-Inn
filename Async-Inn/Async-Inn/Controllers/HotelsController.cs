@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Interfaces;
+using Async_Inn.Models.Dtos;
 
 namespace Async_Inn.Controllers
 {
@@ -26,7 +27,7 @@ namespace Async_Inn.Controllers
 
         // GET: api/Hotels
         [HttpGet("{hotelId}/Rooms")]
-        public async Task<ActionResult<IEnumerable<Hotel>>> GetHotelRooms(int hotelId)
+        public async Task<ActionResult<IEnumerable<HotelsDto>>> GetHotelRooms(int hotelId)
         {
             var rooms = await _hotelRoom.GetAllRooms(hotelId);
             return Ok(rooms);
@@ -45,7 +46,7 @@ namespace Async_Inn.Controllers
         }
         // GET: api/Hotels/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<HotelsDto>> GetHotel(int id)
         {
           var hotel = await _context.GetHotel(id);
             if (hotel != null) { 
@@ -58,7 +59,7 @@ namespace Async_Inn.Controllers
         // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHotel(int id, Hotel hotel)
+        public async Task<IActionResult> PutHotel(int id, HotelsDto hotel)
         {
           
             return Ok(_context.PutHotel(id, hotel));
@@ -67,7 +68,7 @@ namespace Async_Inn.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
+        public async Task<ActionResult<HotelsDto>> PostHotel(HotelsDto hotel)
         {
           await _context.PostHotel(hotel);
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);

@@ -1,6 +1,7 @@
 ﻿using Async_Inn.Data;
 using Async_Inn.Interfaces;
 using Async_Inn.Models;
+using Async_Inn.Models.Dtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Async_Inn.Services
@@ -37,41 +38,75 @@ namespace Async_Inn.Services
 
         public async Task DeleteRoom(int id)
         {
-            var room =await GetRoom(id);
-            if (room != null) { 
-             _context.Rooms.Remove(room);
-                await _context.SaveChangesAsync();
-            }
+            //var room =await GetRoom(id);
+            //if (room != null) { 
+            // //_context.Rooms.Remove(room);
+            //    await _context.SaveChangesAsync();
+            //}
         }
 
-        public async Task<Room> GetRoom(int id)
+        public async Task<RoomsDto> GetRoom(int id)
         {
             var room = await _context.Rooms
-                .FindAsync(id);
+                .Select(r=>new RoomsDto
+                {
+                    Id = r.Id,
+                    Layout = r.Layout,
+                    Name = r.Name,
+                    Amenities =r.Amenities.Select(a=> new AmenitiesDto
+                    {
+                        Id= a.Id,
+                        Name= a.Name
+                    }).ToList()
+                }
+                )
+                .Where(r=>r.Id==id).FirstOrDefaultAsync();
+           
             return room;
         }
 
-        public async Task<IEnumerable<Room>> GetRoomss()
+        public async Task<IEnumerable<RoomsDto>> GetRoomss()
         {
             var rooms = await _context.Rooms
-                .Include(e=>e.Amenities)
+                .Select(r => new RoomsDto
+                {
+                    Id = r.Id,
+                    Layout = r.Layout,
+                    Name = r.Name,
+                    Amenities = r.Amenities.Select(a => new AmenitiesDto
+                    {
+                        Id = a.Id,
+                        Name = a.Name
+                    }).ToList()
+                }
+                )
                 .ToListAsync();
+               
             return rooms;
         }
 
-        public async Task<Room> PostRoom(Room room)
+        public async Task<RoomsDto> PostRoom(RoomsDto room)
         {
-            await _context.Rooms.AddAsync(room);
+            var roomToAdd = new Room();
+            roomToAdd.Name = room.Name;
+            roomToAdd.Layout = room.Layout;
+            roomToAdd.Amenities=room.Amenities.Select(a=>new Amenity
+            {
+                Id=a.Id,
+                Name=a.Name
+            }).ToList();
+               
+            await _context.Rooms.AddAsync(roomToAdd);
             await _context.SaveChangesAsync();
             var roomToReturn = await _context.Rooms.FirstOrDefaultAsync(r=>r.Id == room.Id);
-            return roomToReturn;
+            return room;
         }
 
-        public async Task PutRoom(int id, Room room)
+        public async Task PutRoom(int id, RoomsDto room)
         {
-            var roomUpdate = await GetRoom(id);
-            roomUpdate.Name = room.Name;
-            roomUpdate.Layout = room.Layout;
+            var roomToUpdate = await _context.Rooms.Where(r => r.Id == id).FirstOrDefaultAsync();
+            roomToUpdate.Name = room.Name;
+            roomToUpdate.Layout = room.Layout;
             await _context.SaveChangesAsync();
         }
 
