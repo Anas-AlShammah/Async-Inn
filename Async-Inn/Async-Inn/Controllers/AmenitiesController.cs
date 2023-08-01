@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Interfaces;
+using Async_Inn.Models.Dtos;
 
 namespace Async_Inn.Controllers
 {
@@ -24,7 +25,7 @@ namespace Async_Inn.Controllers
 
         // GET: api/Amenities
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities()
+        public async Task<ActionResult<IEnumerable<AmenitiesDto>>> GetAmenities()
         {
           var  amenities= await _context.GetAmenities();
             return Ok(amenities);
@@ -32,7 +33,7 @@ namespace Async_Inn.Controllers
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<AmenitiesDto>> GetAmenity(int id)
         {
           var amenity = await _context.GetAmenity(id);
             return Ok(amenity);
@@ -41,7 +42,7 @@ namespace Async_Inn.Controllers
         // PUT: api/Amenities/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAmenity(int id, Amenity amenity)
+        public async Task<IActionResult> PutAmenity(int id, AmenitiesDto amenity)
         {
            await _context.PutAmenity(id, amenity);
             return Ok();
@@ -50,7 +51,7 @@ namespace Async_Inn.Controllers
         // POST: api/Amenities
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
+        public async Task<ActionResult<Amenity>> PostAmenity(AmenitiesDto amenity)
         {
           await _context.PostAmenity(amenity);
 
