@@ -38,11 +38,12 @@ namespace Async_Inn.Services
 
         public async Task DeleteRoom(int id)
         {
-            //var room =await GetRoom(id);
-            //if (room != null) { 
-            // //_context.Rooms.Remove(room);
-            //    await _context.SaveChangesAsync();
-            //}
+            var room =await _context.Rooms.Where(r=>r.Id== id).FirstOrDefaultAsync();
+            if (room != null)
+            {
+                _context.Rooms.Remove(room);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<RoomsDto> GetRoom(int id)

@@ -18,9 +18,9 @@ namespace Async_Inn.Services
         }
         public async Task DeleteHotel(int id)
         {
-            var hotel = await GetHotel(id);
-            if(hotel != null) { 
-           //_context.Hotels.Remove(hotel);
+            var hotel = await _context.Hotels.Where(e=>e.Id==id).FirstOrDefaultAsync();
+            if (hotel != null) {
+                _context.Hotels.Remove(hotel);
                 await _context.SaveChangesAsync();
             }
         }
@@ -104,7 +104,7 @@ namespace Async_Inn.Services
             return hotel;
         }
 
-        public async Task  PutHotel(int id, HotelsDto hotel)
+        public async Task<HotelsDto>  PutHotel(int id, HotelsDto hotel)
         {
             var hotelupdata = await GetHotel(id);
             if (hotelupdata != null)
@@ -115,7 +115,9 @@ namespace Async_Inn.Services
                 hotelupdata.Phone = hotel.Phone;
                 await _context.SaveChangesAsync();
             }
-          
+            return hotelupdata;
+
+
         }
     }
 }
