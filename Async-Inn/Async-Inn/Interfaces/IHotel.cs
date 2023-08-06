@@ -9,7 +9,7 @@ namespace Async_Inn.Interfaces
         Task<IEnumerable<HotelsDto>> GetHotels();
 
         Task<HotelsDto> GetHotel(int id);
-        Task PutHotel(int id, HotelsDto hotel);
+        Task<HotelsDto> PutHotel(int id, HotelsDto hotel);
 
         Task<HotelsDto> PostHotel(HotelsDto hotel);
         Task DeleteHotel(int id);
