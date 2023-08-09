@@ -1,9 +1,10 @@
 ﻿using Async_Inn.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Async_Inn.Data
 {
-    public class AsyncInnDbContext : DbContext
+    public class AsyncInnDbContext : IdentityDbContext<ApplicationUser>
     {
         public AsyncInnDbContext(DbContextOptions options): base(options)
         {
@@ -19,7 +20,7 @@ namespace Async_Inn.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<Hotel>()
             //    .HasMany(e => e.Rooms)
             //    .WithMany(e => e.Hotels)
