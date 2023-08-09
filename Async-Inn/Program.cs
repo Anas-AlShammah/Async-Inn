@@ -1,6 +1,8 @@
 using Async_Inn.Data;
 using Async_Inn.Interfaces;
+using Async_Inn.Models;
 using Async_Inn.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Async_Inn
@@ -15,7 +17,16 @@ namespace Async_Inn
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
      );
-         
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                // There are other options like this
+            })
+ .AddEntityFrameworkStores<AsyncInnDbContext>();
+
+            builder.Services.AddTransient<IUserService, IdentityUserService>();
+
+
             builder.Services.AddScoped < IHotel,HotelService>();
             builder.Services.AddScoped<IHoteRoom, HotelRoomRepository>();
             builder.Services.AddTransient<IRoomcs, RoomService>();
