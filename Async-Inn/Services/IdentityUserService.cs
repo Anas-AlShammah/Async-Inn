@@ -3,16 +3,19 @@ using Async_Inn.Models;
 using Async_Inn.Models.Dtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Security.Claims;
 
 namespace Async_Inn.Services
 {
     public class IdentityUserService : IUserService
     {
         private UserManager<ApplicationUser> userManager;
+        private JwtTokenService jwtTokenService;
 
-        public IdentityUserService(UserManager<ApplicationUser> manager)
+        public IdentityUserService(UserManager<ApplicationUser> manager, JwtTokenService jwtTokenService)
         {
             userManager = manager;
+            this.jwtTokenService = jwtTokenService;
         }
         public async Task<UserDto> Authenticate(string username, string password)
         {
@@ -23,7 +26,8 @@ namespace Async_Inn.Services
                 return new UserDto
                 {
                     Id = user.Id,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Token = await jwtTokenService.GetToken(user, System.TimeSpan.FromMinutes(15))
                 };
             }
 
@@ -44,10 +48,13 @@ namespace Async_Inn.Services
 
             if (result.Succeeded)
             {
+                await userManager.AddToRolesAsync(user, data.Roles);
                 return new UserDto
                 {
                     Id = user.Id,
-                    Username = user.UserName
+                    Username = user.UserName,
+                    Token = await jwtTokenService.GetToken(user, System.TimeSpan.FromMinutes(15))
+
                 };
             }
 
@@ -66,5 +73,16 @@ namespace Async_Inn.Services
 
             return null;
         }
+        public async Task<UserDto> GetUser(ClaimsPrincipal principal)
+        {
+            var user = await userManager.GetUserAsync(principal);
+            return new UserDto
+            {
+                Id = user.Id,
+                Username = user.UserName,
+                Token = await jwtTokenService.GetToken(user, System.TimeSpan.FromMinutes(15))
+            };
+        }
     }
 }
+

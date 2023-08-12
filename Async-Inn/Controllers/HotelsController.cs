@@ -9,11 +9,13 @@ using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Interfaces;
 using Async_Inn.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class HotelsController : ControllerBase
     {
         private readonly IHotel _context;
@@ -27,18 +29,21 @@ namespace Async_Inn.Controllers
 
         // GET: api/Hotels
         [HttpGet("{hotelId}/Rooms")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<HotelsDto>>> GetHotelRooms(int hotelId)
         {
             var rooms = await _hotelRoom.GetAllRooms(hotelId);
             return Ok(rooms);
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Room>>> GetHotels()
         {
             var rooms = await _context.GetHotels();
             return Ok(rooms);
         }
         [HttpGet("{hotelId}/Rooms/{roomNumber}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Room>> GetHotelRoom(int hotelId,int roomNumber)
         {
             var room = await _hotelRoom.GetRoom(hotelId,roomNumber);
@@ -46,6 +51,7 @@ namespace Async_Inn.Controllers
         }
         // GET: api/Hotels/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<HotelsDto>> GetHotel(int id)
         {
           var hotel = await _context.GetHotel(id);
@@ -59,6 +65,7 @@ namespace Async_Inn.Controllers
         // PUT: api/Hotels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Policy = "update")]
         public async Task<IActionResult> PutHotel(int id, HotelsDto hotel)
         {
           
@@ -68,12 +75,14 @@ namespace Async_Inn.Controllers
         // POST: api/Hotels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Policy = "create")]
         public async Task<ActionResult<HotelsDto>> PostHotel(HotelsDto hotel)
         {
           await _context.PostHotel(hotel);
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
         }
         [HttpPost("{hotelId}/rooms")]
+        [Authorize(Roles = "DistrictManager, PropertyManager")]
         public async Task<ActionResult> PostRoom (int id, HotelRoom hotelRoom)
         {
             await _hotelRoom.PostRoom(id, hotelRoom);
@@ -81,6 +90,7 @@ namespace Async_Inn.Controllers
         }
         // DELETE: api/Hotels/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "delete")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
             await _context.DeleteHotel(id);
