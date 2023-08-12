@@ -2,8 +2,10 @@ using Async_Inn.Data;
 using Async_Inn.Interfaces;
 using Async_Inn.Models;
 using Async_Inn.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace Async_Inn
 {
@@ -25,8 +27,25 @@ namespace Async_Inn
  .AddEntityFrameworkStores<AsyncInnDbContext>();
 
             builder.Services.AddTransient<IUserService, IdentityUserService>();
-
-
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+  .AddJwtBearer(options =>
+  {
+      // Tell the authenticaion scheme "how/where" to validate the token + secret
+      options.TokenValidationParameters = JwtTokenService.GetValidationParameters(builder.Configuration);
+  });
+            builder.Services.AddAuthorization(options =>
+            {
+                // Add "Name of Policy", and the Lambda returns a definition
+                options.AddPolicy("create", policy => policy.RequireClaim("permissions", "create"));
+                options.AddPolicy("update", policy => policy.RequireClaim("permissions", "update"));
+                options.AddPolicy("delete", policy => policy.RequireClaim("permissions", "delete"));
+            });
+            builder.Services.AddScoped<JwtTokenService>();
             builder.Services.AddScoped < IHotel,HotelService>();
             builder.Services.AddScoped<IHoteRoom, HotelRoomRepository>();
             builder.Services.AddTransient<IRoomcs, RoomService>();
@@ -50,8 +69,8 @@ namespace Async_Inn
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers();
 

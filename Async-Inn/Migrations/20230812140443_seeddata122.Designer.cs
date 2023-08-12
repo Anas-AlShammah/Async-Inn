@@ -4,6 +4,7 @@ using Async_Inn.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Async_Inn.Migrations
 {
     [DbContext(typeof(AsyncInnDbContext))]
-    partial class AsyncInnDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230812140443_seeddata122")]
+    partial class seeddata122
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -140,16 +143,16 @@ namespace Async_Inn.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fb17bbfb-7968-4502-b102-0fcc98be5d8b",
+                            ConcurrencyStamp = "7e586c11-44a1-4040-acbb-992769f91f96",
                             Email = "districtmanager@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DISTRICTMANAGER@EXAMPLE.COM",
-                            NormalizedUserName = "ADMINM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEC4PGH4UlZtExkA3A7nqEcTx+xarJZOz1efrXTPZj9l48vLEdiofNcPoPxQHotF9pg==",
+                            NormalizedUserName = "DISTRICTMANAGER@EXAMPLE.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGTIgoaP/5ifjIceeIkF9kdUPJlwJzh0nic/l44tnIt+mdJXa2yqOrjLd+bDprAOBA==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "06b9d06a-deaf-49b5-9617-5319fe2cef03",
+                            SecurityStamp = "3ef8b9ad-bd39-4673-baf4-51b59f83883c",
                             TwoFactorEnabled = false,
                             UserName = "adminM"
                         });

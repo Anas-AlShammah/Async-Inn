@@ -9,11 +9,13 @@ using Async_Inn.Data;
 using Async_Inn.Models;
 using Async_Inn.Interfaces;
 using Async_Inn.Models.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Async_Inn.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AmenitiesController : ControllerBase
     {
         private readonly IAmenity _context;
@@ -25,6 +27,7 @@ namespace Async_Inn.Controllers
 
         // GET: api/Amenities
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<AmenitiesDto>>> GetAmenities()
         {
           var  amenities= await _context.GetAmenities();
@@ -33,6 +36,7 @@ namespace Async_Inn.Controllers
 
         // GET: api/Amenities/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<AmenitiesDto>> GetAmenity(int id)
         {
           var amenity = await _context.GetAmenity(id);
@@ -40,8 +44,9 @@ namespace Async_Inn.Controllers
         }
 
         // PUT: api/Amenities/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+       
         [HttpPut("{id}")]
+        [Authorize(Roles = "DistrictManager, PropertyManager,Agent")]
         public async Task<IActionResult> PutAmenity(int id, AmenitiesDto amenity)
         {
            await _context.PutAmenity(id, amenity);
@@ -49,8 +54,9 @@ namespace Async_Inn.Controllers
         }
 
         // POST: api/Amenities
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+      
         [HttpPost]
+        [Authorize(Policy = "create")]
         public async Task<ActionResult<Amenity>> PostAmenity(AmenitiesDto amenity)
         {
           await _context.PostAmenity(amenity);
@@ -60,6 +66,7 @@ namespace Async_Inn.Controllers
 
         // DELETE: api/Amenities/5
         [HttpDelete("{id}")]
+        [Authorize(Policy = "delete")]
         public async Task<IActionResult> DeleteAmenity(int id)
         {
             await _context.DeleteAmenity(id);
